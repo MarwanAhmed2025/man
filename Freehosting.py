@@ -2,7 +2,7 @@ import os
 import subprocess
 import telebot
 
-# ضع توكن البوت الخاص بك هنا
+# توكن البوت الخاص بك
 BOT_TOKEN = "8705628494:AAHFfe-Bc5PGdabbzYllKiaAsxWqScK9Cs0"
 
 bot = telebot.TeleBot(BOT_TOKEN)
@@ -16,7 +16,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 def send_welcome(message):
     welcome_text = (
         "👋 **مرحباً بك في بوت استضافة وتشغيل ملفات بايثون!**\n\n"
-        "📁 أرسل لي أي ملف بايثون بصلامة (`.py`) وسأقوم باستضافته، "
+        "📁 أرسل لي أي ملف بايثون بصيغة (`.py`) وسأقوم باستضافته، "
         "تشغيله، وإرسال مخرجات الكود إليك فوراً."
     )
     bot.reply_to(message, welcome_text, parse_mode="Markdown")
@@ -59,14 +59,26 @@ def handle_python_file(message):
         response = f"🖥️ **نتيجة تشغيل الملف `{file_name}`:**\n\n"
 
         if stdout:
-            response += f"📋 **المخرجات (Output):**\n"
-http://googleusercontent.com/immersive_entry_chip/0
-http://googleusercontent.com/immersive_entry_chip/1
-3. افتح التلجرام، توجه إلى البوت الخاص بك، وأرسل له أي ملف بايثون بسيط (مثال: ملف يحتوي على `print("Hello World")`).
-4. سيقوم البوت باستلام الملف، تنفيذه، وإعادة النتيجة إليك في الشات مباشرة.
+            # هنا تم إصلاح السطر ليقوم بطباعة النتيجة الفعلية (stdout)
+            response += f"📋 **المخرجات (Outputs):**\n```\n{stdout[:3000]}\n```\n"
 
----
+        if stderr:
+            response += f"⚠️ **الأخطاء (Errors):**\n```\n{stderr[:1000]}\n```\n"
 
-### 💡 ملاحظات أمنية واستضافة دائمية:
-* **الأمان:** تشغيل أكواد بايثون من مستخدمين آخرين على جهازك مباشرة يعتبر خطراً أمنياً، حيث يمكن للكود المرفوع الوصول لملفات النظام. يُفضل تشغيل البوت داخل بيئة معزولة مثل **Docker Container** أو **VPS**.
-* **الاستضافة الدائمة:** لتشغيل البوت 24/7 يمكنك رفع سكريبت البوت على خوادم VPS (مثل DigitalOcean أو Linode) أو منصات استضافة مثل Render أو PythonAnywhere.
+        if not stdout and not stderr:
+            response += "ℹ️ تم تنفيذ الملف بنجاح ولكن لم ينتج عنه أي مخرجات نصية."
+
+        bot.reply_to(message, response, parse_mode="Markdown")
+
+    except subprocess.TimeoutExpired:
+        bot.reply_to(
+            message,
+            "❌ **خطأ:** تجاوز الملف الحد الأقصى لوقت التنفيذ (15 ثانية). "
+            "يرجى التأكد من أن الكود لا يحتوي على حلقات غير منتهية `while True`."
+        )
+    except Exception as e:
+        bot.reply_to(message, f"❌ حدث خطأ أثناء المعالجة: `{str(e)}`", parse_mode="Markdown")
+
+
+print("🚀 البوت يعمل الآن وجاهز لاستقبال الملفات...")
+bot.infinity_polling()
