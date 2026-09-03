@@ -3,7 +3,7 @@ import subprocess
 import telebot
 
 # ضع توكن البوت الخاص بك هنا
-BOT_TOKEN = "ضع_التوكن_الخاص_بك_هنا"
+BOT_TOKEN = "8705628494:AAHFfe-Bc5PGdabbzYllKiaAsxWqScK9Cs0"
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
