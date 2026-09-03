@@ -59,7 +59,7 @@ def handle_python_file(message):
         response = f"🖥️ **نتيجة تشغيل الملف `{file_name}`:**\n\n"
 
         if stdout:
-            response += f"📋 **المخرجات (Output):**\n
+            response += f"📋 **المخرجات" (Output):**\n
 http://googleusercontent.com/immersive_entry_chip/0
 http://googleusercontent.com/immersive_entry_chip/1
 3. افتح التلجرام، توجه إلى البوت الخاص بك، وأرسل له أي ملف بايثون بسيط (مثال: ملف يحتوي على `print("Hello World")`).
